@@ -37,7 +37,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
   // Function to simulate fetching weather data
   void _fetchWeather() {
     setState(() {
-      _cityName = _cityController.text;
+      _cityName = _cityController.text.isNotEmpty ? _cityController.text : "Unknown City"; // Show city name or fallback
 
       // Generate a random temperature between 15°C and 30°C
       final random = Random();
@@ -75,10 +75,13 @@ class _WeatherScreenState extends State<WeatherScreen> {
               child: const Text('Fetch Weather'),
             ),
             const SizedBox(height: 20),
+            // Display city name
             Text('City: $_cityName', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 10),
+            // Display temperature
             Text('Temperature: $_temperature', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 10),
+            // Display weather condition
             Text('Condition: $_condition', style: Theme.of(context).textTheme.titleLarge),
           ],
         ),
