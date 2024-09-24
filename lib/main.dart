@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -33,12 +34,19 @@ class _WeatherScreenState extends State<WeatherScreen> {
   String _temperature = "Temperature";
   String _condition = "Weather Condition";
 
+  // Function to simulate fetching weather data
   void _fetchWeather() {
     setState(() {
-      // Simulate fetching weather data based on city name input
       _cityName = _cityController.text;
-      _temperature = "25°C"; // Placeholder temperature
-      _condition = "Sunny"; // Placeholder condition
+
+      // Generate a random temperature between 15°C and 30°C
+      final random = Random();
+      int temp = 15 + random.nextInt(16); // Random temperature between 15 and 30
+      _temperature = '$temp°C';
+
+      // Randomly select a weather condition
+      List<String> conditions = ['Sunny', 'Cloudy', 'Rainy'];
+      _condition = conditions[random.nextInt(conditions.length)];
     });
   }
 
