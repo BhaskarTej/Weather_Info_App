@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,37 +15,30 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const WeatherScreen(),
+      home: const MyHomePage(title: 'Weather App Home Page'),
     );
   }
 }
 
-class WeatherScreen extends StatefulWidget {
-  const WeatherScreen({super.key});
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
 
   @override
-  State<WeatherScreen> createState() => _WeatherScreenState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _WeatherScreenState extends State<WeatherScreen> {
-  final TextEditingController _cityController = TextEditingController();
-  String _cityName = "City Name";
-  String _temperature = "Temperature";
-  String _condition = "Weather Condition";
+class _MyHomePageState extends State<MyHomePage> {
+  String _cityName = '';
+  String _weatherCondition = '';
+  int _temperature = 0;
 
   // Function to simulate fetching weather data
   void _fetchWeather() {
     setState(() {
-      _cityName = _cityController.text.isNotEmpty ? _cityController.text : "Unknown City"; // Show city name or fallback
-
-      // Generate a random temperature between 15°C and 30°C
-      final random = Random();
-      int temp = 15 + random.nextInt(16); // Random temperature between 15 and 30
-      _temperature = '$temp°C';
-
-      // Randomly select a weather condition
-      List<String> conditions = ['Sunny', 'Cloudy', 'Rainy'];
-      _condition = conditions[random.nextInt(conditions.length)];
+      _temperature = 15 + (30 - 15) * (new DateTime.now().second % 100) ~/ 100; // Simulated temperature
+      _weatherCondition = ["Sunny", "Cloudy", "Rainy"][(new DateTime.now().second % 3)]; // Simulated weather condition
     });
   }
 
@@ -54,20 +46,20 @@ class _WeatherScreenState extends State<WeatherScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Weather App'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text(widget.title),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
             TextField(
-              controller: _cityController,
-              decoration: const InputDecoration(
-                labelText: 'Enter City Name',
-                border: OutlineInputBorder(),
-              ),
+              decoration: const InputDecoration(labelText: 'Enter City Name'),
+              onChanged: (value) {
+                setState(() {
+                  _cityName = value;
+                });
+              },
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -75,18 +67,44 @@ class _WeatherScreenState extends State<WeatherScreen> {
               child: const Text('Fetch Weather'),
             ),
             const SizedBox(height: 20),
-            // Display city name
-            Text('City: $_cityName', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 10),
-            // Display temperature
-            Text('Temperature: $_temperature', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 10),
-            // Display weather condition
-            Text('Condition: $_condition', style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              'City: $_cityName',
+              style: Theme.of(context).textTheme.bodyLarge, // Updated style
+            ),
+            Text(
+              'Temperature: $_temperature°C',
+              style: Theme.of(context).textTheme.bodyLarge, // Updated style
+            ),
+            Text(
+              'Condition: $_weatherCondition',
+              style: Theme.of(context).textTheme.bodyLarge, // Updated style
+            ),
+            const SizedBox(height: 40),
+            // 7-Day Forecast
+            Column(
+              children: [
+                Text(
+                  "7-Day Forecast",
+                  style: Theme.of(context).textTheme.displayMedium, // Forecast title style
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: 7,
+                  itemBuilder: (context, index) {
+                    String day = "Day ${index + 1}";
+                    String forecast = "Sunny, 25°C"; // Example forecast data
+                    return ListTile(
+                      title: Text(day),
+                      subtitle: Text(forecast),
+                    );
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 }
-//The code is working well.
+//Correct Code
